@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "targets",
+  "info": {
+    "singularName": "target",
+    "pluralName": "targets",
+    "displayName": "Target"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Description": {
+      "type": "string"
+    },
+    "Icon": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}
