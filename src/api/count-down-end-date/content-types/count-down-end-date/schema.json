@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "count_down_end_dates",
+  "info": {
+    "singularName": "count-down-end-date",
+    "pluralName": "count-down-end-dates",
+    "displayName": "CountDownEndDate"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "endDate": {
+      "type": "datetime"
+    }
+  }
+}

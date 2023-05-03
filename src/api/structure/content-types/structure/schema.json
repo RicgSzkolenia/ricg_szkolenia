@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "structures",
+  "info": {
+    "singularName": "structure",
+    "pluralName": "structures",
+    "displayName": "Structure"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    }
+  }
+}
