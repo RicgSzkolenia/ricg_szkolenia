@@ -1,10 +1,10 @@
 {
-  "kind": "collectionType",
-  "collectionName": "image_text_blocks",
+  "kind": "singleType",
+  "collectionName": "course_author_blocks",
   "info": {
-    "singularName": "image-text-block",
-    "pluralName": "image-text-blocks",
-    "displayName": "ImageTextBlock",
+    "singularName": "course-author-block",
+    "pluralName": "course-author-blocks",
+    "displayName": "CourseAuthorBlock",
     "description": ""
   },
   "options": {
@@ -14,12 +14,6 @@
   "attributes": {
     "Title": {
       "type": "string"
-    },
-    "SubTitle": {
-      "type": "string"
-    },
-    "Text": {
-      "type": "richtext"
     },
     "image": {
       "type": "media",
@@ -31,6 +25,12 @@
         "videos",
         "audios"
       ]
+    },
+    "Text": {
+      "type": "richtext"
+    },
+    "SubTitle": {
+      "type": "string"
     }
   }
 }
