@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "paymentId": {
+      "type": "string"
+    },
+    "products": {
+      "type": "json"
+    },
+    "email": {
+      "type": "email"
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Paid",
+        "UnPaid",
+        "AwaitingPayment"
+      ]
+    }
+  }
+}
