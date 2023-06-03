@@ -58,16 +58,14 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
         let event;
 
         try {
-          event = stripe.webhooks.constructEvent(payload, signature, 'whsec_a1c166ff291fc5e65cad0f0e35e4d3ed7064e14095039a12990b166d3a39f162');
-          console.log('EVENT types:', event.type, event.data.items?.data);
+          event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
           switch (event.type) {
             case 'checkout.session.completed': {
                 const session = event.data.object;
                 const customerMail = session.customer_details.email;
                 // if session is paid
                 if (session.payment_status === 'paid') { 
-
-                    // retirving bought objects: 
+                    // retirving bought objects:
                     const coursesIds = session.metadata.lineItemIds.split(',');
                     const coursesBought = await Promise.all(
                         coursesIds.map( async (courseId) => {
@@ -90,8 +88,17 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                         subject: 'Paid successfully!!!',
                         html: '<p>Here is your link to zoom webinar: </p>',
                       })
+                    return ctx.send({
+                        message: 'The content was created!'
+                    }, 201);
                 }
                 break;
+            }
+
+            case 'payment_intent.payment_failed': {
+                return ctx.send({
+                    message: 'Paymnet failed'
+                }, 500);
             }
 
           }
@@ -102,18 +109,3 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
         }
     }
 }));
-
-
-
-
-
-// const order = await strapi.db.query("api::order.order").findOne({ where: { paymentId: session.id } });
-
-                    // await strapi.db.query('api::order.order').update({
-                    //     where: { id: order.id },
-                    //     data: {
-                    //         ...order, 
-                    //         email: customerMail,
-                    //         paymentStatus: 'Paid'
-                    //     },
-                    //   });
