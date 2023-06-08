@@ -82,12 +82,50 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
 
 
                     // sending user link via email: 
-                    await strapi.plugins['email'].services.email.send({
-                        to: customerMail,
-                        from: process.env.SINGLE_AUTHORIZED_SENDER, // e.g. single sender verification in SendGrid
-                        subject: 'Paid successfully!!!',
-                        html: '<p>Here is your link to zoom webinar: </p>',
-                      })
+                    // await strapi.plugins['email'].services.email.send({
+                    //     to: customerMail,
+                    //     from: process.env.SINGLE_AUTHORIZED_SENDER, // e.g. single sender verification in SendGrid
+                    //     subject: 'Paid successfully!!!',
+                    //     html: '<p>Here is your link to zoom webinar: </p>',
+                    //   })
+
+                    await strapi.plugins['email'].services.email.sendTemplatedEmail(
+                        {
+                          // required
+                          to: 'vs2001dor@gmail.com',
+                          // optional if /config/plugins.js -> email.settings.defaultFrom is set
+                          from: 'szkolenia@ricg.eu',
+
+                        },
+                        {
+                          // required - Ref ID defined in the template designer (won't change on import)
+                          templateReferenceId: 1,
+                          // If provided here will override the template's subject.
+                          // Can include variables like `Thank you for your order {{= USER.firstName }}!`
+                          subject: `Thank you for your order`,
+                        },
+                        {
+                          // this object must include all variables you're using in your email template
+                          USER: {
+                            firstname: 'John',
+                            lastname: 'Doe',
+                          },
+                          order: {
+                            products: [
+                              { name: 'Article 1', price: 9.99 },
+                              { name: 'Article 2', price: 5.55 },
+                            ],
+                          },
+                          shippingCost: 5,
+                          total: 20.54,
+                        }
+                      );
+
+
+
+
+
+
                     return ctx.send({
                         message: 'The content was created!'
                     }, 201);
