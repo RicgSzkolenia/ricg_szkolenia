@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tiktoks",
+  "info": {
+    "singularName": "tiktok",
+    "pluralName": "tiktoks",
+    "displayName": "Tiktok"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tiktokLink": {
+      "type": "string"
+    }
+  }
+}

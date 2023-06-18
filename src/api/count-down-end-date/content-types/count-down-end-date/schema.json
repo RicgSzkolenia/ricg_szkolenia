@@ -4,7 +4,7 @@
   "info": {
     "singularName": "count-down-end-date",
     "pluralName": "count-down-end-dates",
-    "displayName": "CountDownEndDate"
+    "displayName": "count-down-end-date"
   },
   "options": {
     "draftAndPublish": true
@@ -12,7 +12,7 @@
   "pluginOptions": {},
   "attributes": {
     "endDate": {
-      "type": "datetime"
+      "type": "date"
     }
   }
 }

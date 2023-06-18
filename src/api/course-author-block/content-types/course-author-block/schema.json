@@ -4,7 +4,7 @@
   "info": {
     "singularName": "course-author-block",
     "pluralName": "course-author-blocks",
-    "displayName": "CourseAuthorBlock",
+    "displayName": "course-author-block",
     "description": ""
   },
   "options": {
@@ -13,6 +13,9 @@
   "pluginOptions": {},
   "attributes": {
     "Title": {
+      "type": "string"
+    },
+    "SubTitle": {
       "type": "string"
     },
     "image": {
@@ -26,11 +29,13 @@
         "audios"
       ]
     },
-    "Text": {
-      "type": "richtext"
-    },
-    "SubTitle": {
-      "type": "string"
+    "richText": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "standard"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
     }
   }
 }

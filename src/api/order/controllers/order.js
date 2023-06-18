@@ -9,6 +9,7 @@ const stripe = require('stripe')(process.env.STRIPE_KEY);
 const unparsed = require('koa-body/unparsed.js');
 const { createCoreController } = require('@strapi/strapi').factories;
 
+
 module.exports = createCoreController('api::order.order', ({strapi})=> ({
     async create(ctx) {
         const { products } = ctx.request.body;
@@ -70,7 +71,6 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     const coursesBought = await Promise.all(
                         coursesIds.map( async (courseId) => {
                             const item =  await strapi.service("api::course.course").findOne(courseId)
-                            console.log(item);
                             return item;
                         })
                     )
@@ -80,49 +80,23 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     .service("api::order.order")
                     .create({ data: { paymentStatus: 'Paid', products: coursesBought, paymentId: session.id, email: customerMail } });
 
-
-                    // sending user link via email: 
-                    // await strapi.plugins['email'].services.email.send({
-                    //     to: customerMail,
-                    //     from: process.env.SINGLE_AUTHORIZED_SENDER, // e.g. single sender verification in SendGrid
-                    //     subject: 'Paid successfully!!!',
-                    //     html: '<p>Here is your link to zoom webinar: </p>',
-                    //   })
-
-                    await strapi.plugins['email'].services.email.sendTemplatedEmail(
-                        {
-                          // required
-                          to: 'vs2001dor@gmail.com',
-                          // optional if /config/plugins.js -> email.settings.defaultFrom is set
-                          from: 'szkolenia@ricg.eu',
-
-                        },
-                        {
-                          // required - Ref ID defined in the template designer (won't change on import)
-                          templateReferenceId: 1,
-                          // If provided here will override the template's subject.
-                          // Can include variables like `Thank you for your order {{= USER.firstName }}!`
-                          subject: `Thank you for your order`,
-                        },
-                        {
-                          // this object must include all variables you're using in your email template
-                          USER: {
-                            firstname: 'John',
-                            lastname: 'Doe',
-                          },
-                          order: {
-                            products: [
-                              { name: 'Article 1', price: 9.99 },
-                              { name: 'Article 2', price: 5.55 },
-                            ],
-                          },
-                          shippingCost: 5,
-                          total: 20.54,
-                        }
-                      );
-
-
-
+                    try{
+                        const links = await strapi.service("api::link.link").findOne(1);
+                        const link = links?.link
+                        console.log('Link', links.link, link);
+                        await strapi.plugins['email'].services.email.send({
+                            to: customerMail,            
+                            from: 'szkolenia@ricg.eu',
+                            subject: 'Successful Payment',
+                            template_id: `d-c46b6cdcc0a346a9b3e82184430f18b4`,
+                            dynamic_template_data: {
+                                "callbackUrl": link || 'https://szkolenia.ricg.eu'
+                            }
+                            });
+                    } catch(err) {
+                        console.log(err);
+                    }
+            
 
 
 

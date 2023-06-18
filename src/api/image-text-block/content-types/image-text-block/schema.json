@@ -18,9 +18,6 @@
     "SubTitle": {
       "type": "string"
     },
-    "Text": {
-      "type": "richtext"
-    },
     "image": {
       "type": "media",
       "multiple": false,
@@ -31,6 +28,17 @@
         "videos",
         "audios"
       ]
+    },
+    "reverse": {
+      "type": "boolean"
+    },
+    "richText": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "standard"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
     }
   }
 }
