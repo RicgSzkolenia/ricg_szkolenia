@@ -4,7 +4,8 @@
   "info": {
     "singularName": "course-percs-carousel-tile",
     "pluralName": "course-percs-carousel-tiles",
-    "displayName": "course-percs-carousel-tile"
+    "displayName": "course-percs-carousel-tile",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -15,14 +16,23 @@
       "type": "string"
     },
     "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "details": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "standard"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
     }
   }
 }
