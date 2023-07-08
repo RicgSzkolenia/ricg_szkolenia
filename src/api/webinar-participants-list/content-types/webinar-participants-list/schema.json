@@ -4,23 +4,14 @@
   "info": {
     "singularName": "webinar-participants-list",
     "pluralName": "webinar-participants-lists",
-    "displayName": "WebinarParticipantsList"
+    "displayName": "WebinarReport",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "participantsList": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
-      "type": "media",
-      "multiple": false
-    },
     "webinarDate": {
       "type": "datetime"
     },
@@ -32,6 +23,16 @@
       "relation": "oneToMany",
       "target": "api::graduate.graduate",
       "mappedBy": "webinar_participants_list"
+    },
+    "rawData": {
+      "allowedTypes": [
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "duration": {
+      "type": "string"
     }
   }
 }

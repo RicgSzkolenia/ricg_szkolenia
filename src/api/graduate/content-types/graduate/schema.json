@@ -4,7 +4,8 @@
   "info": {
     "singularName": "graduate",
     "pluralName": "graduates",
-    "displayName": "Graduate"
+    "displayName": "Graduate",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -25,6 +26,13 @@
       "relation": "manyToOne",
       "target": "api::webinar-participants-list.webinar-participants-list",
       "inversedBy": "graduates"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "COMPLETED,",
+        "FAILED"
+      ]
     }
   }
 }
