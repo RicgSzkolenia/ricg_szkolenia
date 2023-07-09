@@ -24,15 +24,11 @@
       "target": "api::graduate.graduate",
       "mappedBy": "webinar_participants_list"
     },
-    "rawData": {
-      "allowedTypes": [
-        "files"
-      ],
-      "type": "media",
-      "multiple": false
-    },
     "duration": {
       "type": "string"
+    },
+    "rawData": {
+      "type": "json"
     }
   }
 }

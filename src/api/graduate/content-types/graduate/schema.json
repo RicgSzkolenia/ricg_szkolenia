@@ -30,9 +30,15 @@
     "status": {
       "type": "enumeration",
       "enum": [
-        "COMPLETED,",
+        "COMPLETED",
         "FAILED"
       ]
+    },
+    "certificates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::certificate.certificate",
+      "mappedBy": "graduate"
     }
   }
 }

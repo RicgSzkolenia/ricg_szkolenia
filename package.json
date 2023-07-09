@@ -16,6 +16,7 @@
     "@strapi/provider-email-sendgrid": "^4.10.5",
     "@strapi/provider-upload-cloudinary": "^4.9.2",
     "@strapi/strapi": "4.9.2",
+    "pdfkit": "^0.13.0",
     "pg": "8.8.0",
     "strapi-plugin-email-designer": "^2.1.2",
     "stripe": "^12.5.0"
