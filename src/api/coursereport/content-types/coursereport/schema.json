@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "coursereports",
+  "info": {
+    "singularName": "coursereport",
+    "pluralName": "coursereports",
+    "displayName": "CourseReport"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "rawData": {
+      "type": "json"
+    },
+    "students": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::student.student"
+    },
+    "duration": {
+      "type": "decimal"
+    },
+    "course": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course.course"
+    }
+  }
+}
