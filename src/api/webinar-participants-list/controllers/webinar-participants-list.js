@@ -20,13 +20,14 @@ module.exports = createCoreController('api::webinar-participants-list.webinar-pa
                 status: participant.status,
                 publishedAt: new Date()
             }}).catch((e) => {
-                console.log('Erreor happende: ', e)
+                console.log('Error happende: ', e)
             });
             graduates.push(results);
         }
-               
         ctx.request.body.data = {...body, graduates: [...graduates]}
-        const { data, meta } = await super.create(ctx);
+        const { data, meta } = await super.create(ctx).catch((e) => {
+            console.log('Error occured: ', e)
+        });
         return { data, meta } 
     }
 }));

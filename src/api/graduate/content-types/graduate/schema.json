@@ -27,13 +27,6 @@
       "target": "api::webinar-participants-list.webinar-participants-list",
       "inversedBy": "graduates"
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "COMPLETED",
-        "FAILED"
-      ]
-    },
     "certificates": {
       "type": "relation",
       "relation": "oneToMany",

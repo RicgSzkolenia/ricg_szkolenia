@@ -82,8 +82,7 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
 
                     try{
                         const links = await strapi.service("api::link.link").findOne(1);
-                        const link = links?.link
-                        console.log('Link', links.link, link);
+                        const link = links?.link;
                         await strapi.plugins['email'].services.email.send({
                             to: customerMail,            
                             from: 'szkolenia@ricg.eu',
