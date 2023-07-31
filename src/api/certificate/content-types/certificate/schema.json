@@ -4,7 +4,8 @@
   "info": {
     "singularName": "certificate",
     "pluralName": "certificates",
-    "displayName": "Certificate"
+    "displayName": "Certificate",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -20,13 +21,6 @@
       "target": "api::student.student",
       "inversedBy": "certificates"
     },
-    "certificate": {
-      "allowedTypes": [
-        "files"
-      ],
-      "type": "media",
-      "multiple": false
-    },
     "date": {
       "type": "date"
     },
@@ -36,6 +30,15 @@
         "COMPLETED",
         "FAILED"
       ]
+    },
+    "certificate": {
+      "type": "text"
+    },
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "certificates"
     }
   }
 }
