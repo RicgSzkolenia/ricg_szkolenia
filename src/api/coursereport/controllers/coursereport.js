@@ -30,7 +30,9 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
             
 
             if ( participant.status === 'COMPLETED' ) {
-                const certificateBase64 = await generateCertificatePdf(participant.name + ' ' + participant.surname);
+                const today = new Date();
+                const participantString = participant.name + ' ' + participant.surname;
+                const certificateBase64 = await generateCertificatePdf(participantString, 'Pauilina Laczek', today.getDay().toString(), today.getFullYear().toString(),  body.courseName );
                 const certificateId = uuidv4();
                 const certificate = await strapi.service('api::certificate.certificate').create({ 
                     data: {
@@ -42,7 +44,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                         certificate: certificateBase64
                     }
                 }).catch((e) => console.log('Error creating certificate: ', e.details, e));
-                const today = new Date();
+               
                 await strapi.plugins['email'].services.email.send({
                     to: 'vs2001dor@gmail.com',            
                     from: 'szkolenia@ricg.eu',
@@ -53,7 +55,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                         "issueYear": today.getFullYear(),
                         "issueMonth": today.getMonth(),
                         "certId": certificateId,
-                        "callbackUrl":  'https://szkolenia.ricg.eu'
+                        "certUrl": `https://szkolenia.ricg.eu/certificate${certificateId}`
                     },
                     attachments: [
                         {

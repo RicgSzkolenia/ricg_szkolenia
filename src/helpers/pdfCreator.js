@@ -1,16 +1,25 @@
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument, StandardFonts, drawTextField, doc } = require('pdf-lib');
 const { readFileSync } = require("fs");
 
-module.exports = async function generateCertificatePdf (nameString) {
-    const existingPdfBytes = readFileSync('./src/helpers/fillable_pdf_template.pdf');
+module.exports = async function generateCertificatePdf (nameString, author, day, year, courseName) {
+    const existingPdfBytes = readFileSync('./src/helpers/final_template.pdf');
     const normalizedNameString = correctPolishLetters(nameString) 
     const pdfDoc = await PDFDocument.load(existingPdfBytes);    
     const form = pdfDoc.getForm()
 
+    const nameField = form.getTextField('text_name');
+    const authorField = form.getTextField('text_author');
+    const dayField = form.getTextField('text_day');
+    const yearField = form.getTextField('text_year');
+    const courseNameField = form.getTextField('text_courseName');
 
-    const nameField = form.getTextField('text_1')
-    nameField.setText(normalizedNameString)
-    
+    nameField.setText(normalizedNameString);
+    authorField.setText(author);
+    dayField.setText(day);
+    yearField.setText(year);
+    courseNameField.setText(courseName);
+
+    form.flatten()
 
     const pdfBytes = await pdfDoc.save();
     return Buffer.from(pdfBytes).toString('base64');
