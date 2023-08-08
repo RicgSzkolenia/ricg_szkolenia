@@ -12,12 +12,15 @@ module.exports = async function generateCertificatePdf (nameString, author, day,
     const dayField = form.getTextField('text_day');
     const yearField = form.getTextField('text_year');
     const courseNameField = form.getTextField('text_courseName');
+    const dateField = form.getTextField('text_date');
+    const today = new Date().getMonth() + '/' + new Date().getFullYear(); 
 
     nameField.setText(normalizedNameString);
     authorField.setText(author);
     dayField.setText(day);
     yearField.setText(year);
     courseNameField.setText(courseName);
+    dateField.setText(today)
 
     form.flatten()
 
