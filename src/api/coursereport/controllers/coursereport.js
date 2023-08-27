@@ -32,7 +32,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
             if ( participant.status === 'COMPLETED' ) {
                 const today = new Date();
                 const participantString = participant.name + ' ' + participant.surname;
-                const certificateBase64 = await generateCertificatePdf(participantString, 'Pauilina Laczek', today.getDay().toString(), today.getFullYear().toString(),  body.courseName );
+                const certificateBase64 = await generateCertificatePdf(participantString, 'Recruitment International Consulting Group Sp. z o.o. ', today.getDay().toString(), today.getFullYear().toString(),  body.courseName );
                 const certificateId = uuidv4();
                 const certificate = await strapi.service('api::certificate.certificate').create({ 
                     data: {

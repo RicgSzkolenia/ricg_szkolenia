@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "coursedates",
+  "info": {
+    "singularName": "coursedate",
+    "pluralName": "coursedates",
+    "displayName": "CourseDate"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "date": {
+      "type": "datetime"
+    },
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "course_dates"
+    }
+  }
+}

@@ -13,32 +13,42 @@ const { createCoreController } = require('@strapi/strapi').factories;
 module.exports = createCoreController('api::order.order', ({strapi})=> ({
     async create(ctx) {
         const { products } = ctx.request.body;
+        
         const lineItemsIds = [];
         const lineItems = await Promise.all(
-            products.map( async (product) => {
-                const item =  await strapi.service("api::course.course").findOne(product.id)
+            products.map( async (item) => {
+                const foundItem =  await strapi.service("api::course.course").findOne(item.course.id)
                 lineItemsIds.push(item.id);
                 return {
                     price_data: {
                         currency: "pln",
                         product_data: {
-                            name: item.Title,
+                            name: foundItem.Title,
+                            description: 'Some description',
+                            metadata: {
+                                'test' : 'anotherone'
+                            }
                         },
-                        unit_amount: Math.round(item.Price * 100),
+                        unit_amount: Math.round(foundItem.Price * 100),
                     },
                     quantity: 1,
                   };
             })
         )
 
+        console.log('Line items: ', lineItems);
+
         try {
             const session = await stripe.checkout.sessions.create({
                 mode: "payment",
-                success_url: `${process.env.CLIENT_URL}?success=true`,
+                success_url: `http://localhost:3000?success=true`,
                 cancel_url: `${process.env.CLIENT_URL}?canceled=true`,
                 line_items: lineItems,
                 shipping_address_collection: { allowed_countries: ['PL'] },
                 payment_method_types: ["card", "blik"],
+                invoice_creation: {
+                    enabled: true,
+                },
                 metadata: {
                     lineItemIds: lineItemsIds.toString()
                 }
@@ -62,6 +72,7 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
           event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
           switch (event.type) {
             case 'checkout.session.completed': {
+                console.log('HERE started');
                 const session = event.data.object;
                 const customerMail = session.customer_details.email;
                 // if session is paid
@@ -94,7 +105,7 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                             }
                             });
                     } catch(err) {
-                        console.log(err);
+                        console.error(err);
                     }
             
 

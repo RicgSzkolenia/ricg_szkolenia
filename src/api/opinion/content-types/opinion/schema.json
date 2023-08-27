@@ -4,7 +4,8 @@
   "info": {
     "singularName": "opinion",
     "pluralName": "opinions",
-    "displayName": "Opinion"
+    "displayName": "Opinion",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -16,16 +17,6 @@
     },
     "AuthorName": {
       "type": "string"
-    },
-    "Avatar": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
-      "type": "media",
-      "multiple": true
     }
   }
 }

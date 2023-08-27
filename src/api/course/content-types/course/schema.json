@@ -4,7 +4,8 @@
   "info": {
     "singularName": "course",
     "pluralName": "courses",
-    "displayName": "Course"
+    "displayName": "Course",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -31,6 +32,43 @@
       "relation": "oneToMany",
       "target": "api::certificate.certificate",
       "mappedBy": "course"
+    },
+    "course_dates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coursedate.coursedate",
+      "mappedBy": "course"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "isOnline": {
+      "type": "boolean"
+    },
+    "description": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "standard"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
+    },
+    "shortDescription": {
+      "type": "richtext"
+    },
+    "category": {
+      "type": "string"
+    },
+    "redeemedPrice": {
+      "type": "decimal"
     }
   }
 }
