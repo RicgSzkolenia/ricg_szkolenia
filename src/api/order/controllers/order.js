@@ -7,6 +7,7 @@
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const unparsed = require('koa-body/unparsed.js');
+const sendEmail = require('../../../helpers/sendEmail');
 const { createCoreController } = require('@strapi/strapi').factories;
 
 
@@ -14,43 +15,39 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
     async create(ctx) {
         const { products } = ctx.request.body;
         
-        const lineItemsIds = [];
         const lineItems = await Promise.all(
             products.map( async (item) => {
-                const foundItem =  await strapi.service("api::course.course").findOne(item.course.id)
-                lineItemsIds.push(item.id);
+                const foundItem =  await strapi.service("api::course.course").findOne(item.course.id);
                 return {
                     price_data: {
                         currency: "pln",
                         product_data: {
                             name: foundItem.Title,
-                            description: 'Some description',
+                            description: foundItem.shortDescription,
                             metadata: {
-                                'test' : 'anotherone'
+                                id: foundItem.id,
+                                date: item.date.value
                             }
                         },
-                        unit_amount: Math.round(foundItem.Price * 100),
+                        unit_amount: Math.round((foundItem.redeemedPrice ?? foundItem.Price) * 100),
                     },
-                    quantity: 1,
+                    quantity: item.quantity,
                   };
-            })
-        )
-
-        console.log('Line items: ', lineItems);
+            }))
 
         try {
             const session = await stripe.checkout.sessions.create({
                 mode: "payment",
                 success_url: `http://localhost:3000?success=true`,
-                cancel_url: `${process.env.CLIENT_URL}?canceled=true`,
+                cancel_url: `http://localhost:3000?success=false`,
                 line_items: lineItems,
-                shipping_address_collection: { allowed_countries: ['PL'] },
                 payment_method_types: ["card", "blik"],
+                allow_promotion_codes: true,
                 invoice_creation: {
                     enabled: true,
                 },
-                metadata: {
-                    lineItemIds: lineItemsIds.toString()
+                tax_id_collection: {
+                    enabled: true,
                 }
             })
 
@@ -65,57 +62,42 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
     async aftertransaction (ctx) {
         const payload = ctx.request.body[Symbol.for("unparsedBody")];
         const signature = ctx.request.headers['stripe-signature'];
-
         let event;
 
         try {
           event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
           switch (event.type) {
             case 'checkout.session.completed': {
-                console.log('HERE started');
-                const session = event.data.object;
-                const customerMail = session.customer_details.email;
-                // if session is paid
-                if (session.payment_status === 'paid') { 
-                    // retirving bought objects:
-                    const coursesIds = session.metadata.lineItemIds.split(',');
-                    const coursesBought = await Promise.all(
-                        coursesIds.map( async (courseId) => {
-                            const item =  await strapi.service("api::course.course").findOne(courseId)
-                            return item;
-                        })
-                    )
-
-                    // creating new order:
-                    await strapi
-                    .service("api::order.order")
-                    .create({ data: { paymentStatus: 'Paid', products: coursesBought, paymentId: session.id, email: customerMail } });
-
-                    try{
-                        const links = await strapi.service("api::link.link").findOne(1);
-                        const link = links?.link
-                        console.log('Link', links.link, link);
-                        await strapi.plugins['email'].services.email.send({
-                            to: customerMail,            
-                            from: 'szkolenia@ricg.eu',
-                            subject: 'Successful Payment',
-                            template_id: `d-c46b6cdcc0a346a9b3e82184430f18b4`,
-                            dynamic_template_data: {
-                                "callbackUrl": link || 'https://szkolenia.ricg.eu'
-                            }
-                            });
-                    } catch(err) {
-                        console.error(err);
+                const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
+                    event.data.object.id,
+                    {
+                      expand: ['line_items'],
                     }
-            
+                  );
+                const lineItems = sessionWithLineItems.line_items;
 
+                const boughtWebinarLinks = [];
+                const boughtWebinarDateIds = [];
+                const boughtItems = await Promise.all(lineItems.data?.map(async (item) => {
+                    const product = await stripe.products.retrieve(item.price.product);
+                    const date = await strapi.service("api::coursedate.coursedate").findOne(product.metadata.date)
+                    boughtWebinarLinks.push(date.webinarLink);
+                    boughtWebinarDateIds.push(date.id)
+                    return {productId: product.metadata.id, date: date.date, productTitle: product.name, quantity: item.quantity };
+                }))
 
+                console.log('Bought items after ransaction: ', boughtItems, 'Webinar links: ', boughtWebinarLinks.join(' , '), 'Ids: ', boughtWebinarDateIds);
 
-                    return ctx.send({
-                        message: 'The content was created!'
-                    }, 201);
+                // if session is paid
+                if (event.data.object.payment_status === 'paid') { 
+                    const customerMail = event.data.object.customer_details.email;
+                    await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.id, course_dates: boughtWebinarDateIds, email: customerMail, } });
+                    sendEmail(customerMail, boughtWebinarLinks.join(', '))
                 }
-                break;
+
+                return ctx.send({
+                    message: 'The content was created!'
+                }, 201);
             }
 
             case 'payment_intent.payment_failed': {

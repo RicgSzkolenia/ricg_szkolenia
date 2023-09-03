@@ -4,7 +4,8 @@
   "info": {
     "singularName": "contactinfo",
     "pluralName": "contactinfos",
-    "displayName": "ContactInfo"
+    "displayName": "ContactInfo",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -21,6 +22,14 @@
       "type": "string"
     },
     "regulation": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "rodo": {
       "allowedTypes": [
         "files"
       ],

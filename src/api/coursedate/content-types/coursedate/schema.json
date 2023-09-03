@@ -4,7 +4,8 @@
   "info": {
     "singularName": "coursedate",
     "pluralName": "coursedates",
-    "displayName": "CourseDate"
+    "displayName": "CourseDate",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,6 +20,9 @@
       "relation": "manyToOne",
       "target": "api::course.course",
       "inversedBy": "course_dates"
+    },
+    "webinarLink": {
+      "type": "string"
     }
   }
 }

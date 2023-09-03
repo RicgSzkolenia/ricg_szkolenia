@@ -15,7 +15,7 @@
     "paymentId": {
       "type": "string"
     },
-    "products": {
+    "rawProducts": {
       "type": "json"
     },
     "email": {
@@ -28,6 +28,11 @@
         "UnPaid",
         "AwaitingPayment"
       ]
+    },
+    "course_dates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coursedate.coursedate"
     }
   }
 }
