@@ -41,7 +41,7 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                 success_url: `http://localhost:3000?success=true`,
                 cancel_url: `http://localhost:3000?success=false`,
                 line_items: lineItems,
-                payment_method_types: ["card", "blik"],
+                payment_method_types: ["card", "blik", "p24"],
                 allow_promotion_codes: true,
                 invoice_creation: {
                     enabled: true,
@@ -68,6 +68,7 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
           event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
           switch (event.type) {
             case 'checkout.session.completed': {
+
                 const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
                     event.data.object.id,
                     {
@@ -76,24 +77,25 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                   );
                 const lineItems = sessionWithLineItems.line_items;
 
-                const boughtWebinarLinks = [];
+                const callbackurls = [];
                 const boughtWebinarDateIds = [];
                 const boughtItems = await Promise.all(lineItems.data?.map(async (item) => {
                     const product = await stripe.products.retrieve(item.price.product);
                     const date = await strapi.service("api::coursedate.coursedate").findOne(product.metadata.date)
-                    boughtWebinarLinks.push(date.webinarLink);
+                    callbackurls.push({ name: product.name, date: date.date, link: date.webinarLink});
                     boughtWebinarDateIds.push(date.id)
                     return {productId: product.metadata.id, date: date.date, productTitle: product.name, quantity: item.quantity };
                 }))
-
-                console.log('Bought items after ransaction: ', boughtItems, 'Webinar links: ', boughtWebinarLinks.join(' , '), 'Ids: ', boughtWebinarDateIds);
 
                 // if session is paid
                 if (event.data.object.payment_status === 'paid') { 
                     const customerMail = event.data.object.customer_details.email;
                     await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.id, course_dates: boughtWebinarDateIds, email: customerMail, } });
-                    sendEmail(customerMail, boughtWebinarLinks.join(', '))
+
+                    await sendEmail(customerMail, callbackurls)
                 }
+
+                console.log('Competed successfully', callbackurls);
 
                 return ctx.send({
                     message: 'The content was created!'

@@ -7,7 +7,7 @@ module.exports = async function sendEmail (email, webinarLink) {
             subject: 'Successful Payment',
             template_id: `d-c46b6cdcc0a346a9b3e82184430f18b4`,
             dynamic_template_data: {
-                "callbackUrl": webinarLink || 'https://szkolenia.ricg.eu'
+                "callbackurls": webinarLink
             }
         });
     } catch(err) {

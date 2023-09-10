@@ -11,9 +11,12 @@ module.exports = async function generateCertificatePdf (nameString, author, day,
     const courseNameField = form.getTextField('text_courseName');
     const dateField = form.getTextField('text_date');
     const today = new Date().getMonth() + '/' + new Date().getFullYear(); 
-    let tmp_author = 'RICG'
+    let tmp_author = 'Recruitment International Consulting Group'
+    nameField.setFontSize(32);
     nameField.setText(correctPolishLetters(normalizedNameString));
+    courseNameField.setFontSize(8);
     courseNameField.setText(correctPolishLetters(courseName));
+    dateField.setFontSize(8);
     dateField.setText(today + ' ' + correctPolishLetters(tmp_author))
 
     form.flatten()
@@ -27,14 +30,23 @@ function correctPolishLetters(inputString) {
     // mapping for characters
     const mapping = {
       ą: "a",
+      Ą: "A",
       ć: "c",
+      Ć: "C",
       ę: "e",
+      Ę: "E",
       ł: "l",
+      Ł: 'L',
       ń: "n",
+      Ń: "N",
       ó: "o",
+      Ó: "O",
       ś: "s",
+      Ś: "S",
       ź: "z",
       ż: "z",
+      Ż: "Z",
+      Ź: "Z",
     };
   
     // variable to save result
