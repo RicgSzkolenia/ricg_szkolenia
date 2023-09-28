@@ -55,7 +55,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                         "issueYear": today.getFullYear(),
                         "issueMonth": today.getMonth(),
                         "certId": certificateId,
-                        "certUrl": `https://szkolenia.ricg.eu/certificate/${certificateId}`
+                        "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
                     },
                     attachments: [
                         {
