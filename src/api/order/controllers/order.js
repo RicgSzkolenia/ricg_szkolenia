@@ -90,7 +90,8 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                 // if session is paid
                 if (event.data.object.payment_status === 'paid') { 
                     const customerMail = event.data.object.customer_details.email;
-                    await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.id, course_dates: boughtWebinarDateIds, email: customerMail, } });
+                    console.log('EVENT +-+: ', event);
+                    await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.payment_intent, course_dates: boughtWebinarDateIds, email: customerMail, } });
 
                     await sendEmail(customerMail, callbackurls)
                 }

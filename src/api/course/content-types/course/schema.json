@@ -72,6 +72,9 @@
     },
     "cardPoints": {
       "type": "json"
+    },
+    "priority": {
+      "type": "integer"
     }
   }
 }
