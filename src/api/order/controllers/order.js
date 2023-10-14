@@ -38,8 +38,8 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
         try {
             const session = await stripe.checkout.sessions.create({
                 mode: "payment",
-                success_url: process.env.CLIENT_FRONT_URL || '',
-                cancel_url: process.env.CLIENT_FRONT_URL || '',
+                success_url: `${process.env.CLIENT_FRONT_URL}/status/payment?success=true` || '',
+                cancel_url: `${process.env.CLIENT_FRONT_URL}/status/payment?success=false` || '',
                 line_items: lineItems,
                 payment_method_types: ["card", "blik", "p24"],
                 allow_promotion_codes: true,
