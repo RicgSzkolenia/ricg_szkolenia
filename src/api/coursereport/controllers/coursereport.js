@@ -24,7 +24,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     email: participant.email,
                     publishedAt: new Date()
                 }}).catch((e) => {
-                    console.log('Erreor happende: ', e)
+                    console.log('Error happended: ', e)
                 })
             }
             
@@ -34,7 +34,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                 const participantString = participant.name + ' ' + participant.surname;
                 const certificateBase64 = await generateCertificatePdf(participantString, 'Recruitment International Consulting Group Sp. z o.o. ', today.getDay().toString(), today.getFullYear().toString(),  body.courseName );
                 const certificateId = uuidv4();
-                const certificate = await strapi.service('api::certificate.certificate').create({ 
+                await strapi.service('api::certificate.certificate').create({ 
                     data: {
                         uniqIdentifier: certificateId,
                         date: new Date().toISOString(),
@@ -46,7 +46,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                 }).catch((e) => console.log('Error creating certificate: ', e.details, e));
                
                 await strapi.plugins['email'].services.email.send({
-                    to: participant.email || '',            
+                    to: participant.email || '',
                     from: 'szkolenia@ricg.eu',
                     subject: 'Successful course Completion',
                     template_id: `d-5fb33423e80f4a9c97024aeb4971fabb`,
@@ -70,8 +70,8 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
             graduates.push(existingStudent);
         }
         
-        ctx.request.body.data = {...body, students: [...graduates]}
-
+        ctx.request.body.data = {...body, course: body.courseId, students: [...graduates]};
+        
         const { data, meta } = await super.create(ctx).catch((e) => {
             console.log('Error occured: ', e)
         });
