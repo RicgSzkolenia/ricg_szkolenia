@@ -27,7 +27,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     console.log('Error happended: ', e)
                 })
             }
-            
+
 
             if ( participant.status === 'COMPLETED' ) {
                 const today = new Date();
@@ -46,7 +46,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                 }).catch((e) => console.log('Error creating certificate: ', e.details, e));
                
                 await strapi.plugins['email'].services.email.send({
-                    to: participant.email || '',
+                    to: 'vs2001dor@gmail.com' || '',
                     from: 'szkolenia@ricg.eu',
                     subject: 'Successful course Completion',
                     template_id: `d-5fb33423e80f4a9c97024aeb4971fabb`,
