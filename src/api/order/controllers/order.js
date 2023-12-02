@@ -7,7 +7,7 @@
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const unparsed = require('koa-body/unparsed.js');
-const sendEmail = require('../../../helpers/sendEmail');
+const { sendPaymentConfiramtionMail } = require('../../../helpers/sendEmail');
 const { createCoreController } = require('@strapi/strapi').factories;
 
 
@@ -92,8 +92,11 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     const customerMail = event.data.object.customer_details.email;
                     console.log('EVENT +-+: ', event);
                     await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.payment_intent, course_dates: boughtWebinarDateIds, email: customerMail, } });
-
-                    await sendEmail(customerMail, callbackurls)
+                    const context = {
+                        callbackurls
+                    }
+                    await sendPaymentConfiramtionMail(customerMail, 'Udana Płatność', context)
+                    // await sendEmail(customerMail, callbackurls)
                 }
 
                 console.log('Competed successfully', callbackurls);

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    
+</head>
+<body>
+    <div class="logo" align="center" style="background-color: #fff;width: 100px; margin: 0 auto;">
+        <img src="https://res.cloudinary.com/dtb1fvbps/image/upload/v1686498754/Group_481405_504aff9a69.png" style="margin: 0 auto;width: 100px;">
+    </div>
+    <div style="text-align: center;padding: 20px;width: 90%;margin: 0 auto;">
+        <div class="illustration" style="width: 350px;margin: 0 auto;">
+            <img class="illustration-image" src="https://res.cloudinary.com/dtb1fvbps/image/upload/v1686498028/Group_481407_440eb5e1ea.png" style="width: 100%;">
+        </div>
+        <div class="header-text" style="margin-top: 10px;">
+            <div id="greeting-text">
+                <p id="greeting-text-first" style=" text-align: center; margin: 0;font-family: 'Quicksand';font-weight: 500;font-size: 43px;text-transform: uppercase;">Cześć!</p>
+                <p id="greeting-text-second" style="text-align: center; margin: 0;font-family: 'Quicksand';font-weight: 500;font-size: 17px;">Dziękujemy za chęć udziału w naszym webinarium </p>
+            </div>
+            <div class="separator" style="margin: 20px auto;width: 40px;height: 5px;background-color: #9E0B78;"></div>
+            <div class="start-wrapper" style="margin-top: 20px;">
+                <p id="start" style="text-align: center; margin: 0;font-family: 'Quicksand';font-size: 29px;text-transform: uppercase;color: #E8625A;">Wystartuj z nami</p>
+                <p id="start-bold" style="margin: 0; text-align: center;font-family: 'Quicksand';font-weight: 700;font-size: 29px;text-transform: uppercase;color: #BD84A4;">rynek pracy bez tajemnic</p>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper" style="padding: 10px;padding-top: 80px;position: relative;width: 90%;max-width: 550px;border-radius: 20px;margin: 50px auto;border: 1px solid #E76C6C;">
+        <div class="email-icon" align="center" style="position: absolute;width: 100px;left: 0;right: 0;top: -50px;margin-left: auto;margin-right: auto;">
+            <img src="https://res.cloudinary.com/dtb1fvbps/image/upload/v1686498809/email_icon_bd292600a4.png" alt="email-icon" style="width: 100px; margin: 0 auto;">
+        </div>
+        <p class="text" style="font-family: 'Quicksand';font-style: normal;font-weight: 400;font-size: 16px;line-height: 20px;text-align: center;color: #303030;margin-top: 5px;">Potwierdzamy, że Twoja wpłata wpłynęła</p>
+        <div>
+            <p class="text-bold" style="width: 100%;text-align: center;font-family: 'Quicksand';font-style: normal;font-weight: 600;font-size: 16px;line-height: 20px;color: #303030;"><b>To Twój pierwszy krok do znalezienia wymarzonej pracy!</b></p>
+        </div>
+
+        <div class="instruction-wrapper">
+            <p class="text-header-bold" style="font-family: 'Quicksand';font-style: normal;font-weight: 600;font-size: 32px;text-align: center;text-transform: uppercase;color: #9E0B78;margin-top: 0;">Instrukcja:</p>
+            <p id="instruction" class="text" style="font-family: 'Quicksand';font-style: normal;font-weight: 400;font-size: 16px;line-height: 20px;text-align: center;color: #303030;margin-top: 5px;margin: 0 auto;width: 70%;">Kliknij w link poniżej.
+                Wypełnij formularz.
+                Na maila otrzymasz potwierdzenie rejestracji oraz link do spotkania.
+                </p>
+                <div style="width: 260px; margin: 0 auto;">
+                    {{#each callbackurls}}
+                    <div style="text-decoration: underline; line-height: 22px;display: block;color: #fff;border: 0; width: 265px;min-height: 85px;background: #9E0B78;border-radius: 20px;font-family: 'Quicksand';font-style: normal;font-weight: 500;font-size: 16px;text-align: center;margin: 20px auto;cursor: pointer;"><a href="{{this.link}}" style="text-decoration: none;color: #fff; width: 265px">{{ this.name}} o {{this.date}} 
+                        <br>
+                        ({{this.link}}) </a></div>
+                    {{/each}}
+                   
+                </div>
+        </div>
+        <div class="termin-wrapper">
+            <p class="termin-header-text " style="font-family: 'Quicksand';font-style: normal;font-weight: 400;font-size: 32px;text-align: center;text-transform: uppercase;margin-bottom: 0;color: #9E0B78;">CZAS TRWANIA:</p>
+            <p class="text" style="font-family: 'Quicksand';font-style: normal;font-weight: 400;font-size: 16px;line-height: 20px;text-align: center;color: #303030;margin-top: 5px;"> 1 godzina</p>
+        </div>
+    </div>
+    <div style="width: 80%;margin: 20px auto;">
+        <p class="text-bold-uppercase" style="font-family: 'Quicksand';font-style: normal;font-weight: 700;font-size: 16px;text-align: center;text-transform: uppercase;color: #303030;">W razie problemów, skontaktuj się z nami: szkolenia@ricg.eu</p>
+        <p class="text-bold-uppercase" style="font-family: 'Quicksand';font-style: normal;font-weight: 700;font-size: 16px;text-align: center;text-transform: uppercase;color: #303030;">www.szkolenia-ricg.eu</p>
+    </div>
+</body>
+</html>

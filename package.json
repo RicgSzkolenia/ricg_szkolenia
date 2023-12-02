@@ -17,6 +17,8 @@
     "@strapi/provider-email-sendgrid": "^4.10.5",
     "@strapi/provider-upload-cloudinary": "^4.9.2",
     "@strapi/strapi": "4.9.2",
+    "node-mailer": "^0.1.1",
+    "nodemailer-express-handlebars": "^6.1.0",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.13.0",
     "pg": "8.8.0",

@@ -7,6 +7,7 @@
 const { createCoreController } = require('@strapi/strapi').factories;
 const { v4: uuidv4 } = require('uuid');
 const generateCertificatePdf = require('../../../helpers/pdfCreator');
+const { sendEmailWithNodeMailer, sendCertificateMail } = require('../../../helpers/sendEmail');
 
 module.exports = createCoreController('api::coursereport.coursereport', (({strapi}) => ({
     async create (ctx) {
@@ -45,36 +46,28 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     }
                 }).catch((e) => console.log('Error creating certificate: ', e.details, e));
                
-                await strapi.plugins['email'].services.email.send({
-                    to: participant.email || '',
-                    from: 'szkolenia@ricg.eu',
-                    subject: 'Successful course Completion',
-                    template_id: `d-5fb33423e80f4a9c97024aeb4971fabb`,
-                    dynamic_template_data: {
-                        "courseName": body.courseName, 
-                        "issueYear": today.getFullYear(),
-                        "issueMonth": today.getMonth(),
-                        "certId": certificateId,
-                        "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
-                    },
-                    attachments: [
-                        {
-                            filename: 'certificate.pdf',
-                            content: certificateBase64
-                        }
-                    ]
-                    });
+                const context = {
+                    "courseName": body.courseName, 
+                    "issueYear": today.getFullYear(),
+                    "issueMonth": today.getMonth(),
+                    "certId": certificateId,
+                    "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
+                }
+                
+                await sendCertificateMail(participant.email, `Certyfikat ${body.courseName}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
+                console.log('Successfully sent email');
+        
 
             }
 
             graduates.push(existingStudent);
         }
         
-        ctx.request.body.data = {...body, course: body.courseId, students: [...graduates]};
         
-        const { data, meta } = await super.create(ctx).catch((e) => {
-            console.log('Error occured: ', e)
-        });
-        return { data, meta } 
+        // ctx.request.body.data = {...body, course: body.courseId, students: [...graduates]};
+        
+        // const { data, meta } = await super.create(ctx).catch((e) => {
+        //     console.log('Error occured: ', e)
+        // });
     }
 })));
