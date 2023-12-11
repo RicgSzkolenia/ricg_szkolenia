@@ -23,6 +23,11 @@
     },
     "webinarLink": {
       "type": "string"
+    },
+    "course_part_dates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coursepartdate.coursepartdate"
     }
   }
 }

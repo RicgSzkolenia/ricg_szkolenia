@@ -39,6 +39,11 @@
       "relation": "manyToOne",
       "target": "api::course.course",
       "inversedBy": "certificates"
+    },
+    "course_part_date": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::coursepartdate.coursepartdate"
     }
   }
 }

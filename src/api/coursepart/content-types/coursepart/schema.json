@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "courseparts",
+  "info": {
+    "singularName": "coursepart",
+    "pluralName": "courseparts",
+    "displayName": "CoursePart",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "course_parts"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "header": {
+      "type": "string"
+    }
+  }
+}

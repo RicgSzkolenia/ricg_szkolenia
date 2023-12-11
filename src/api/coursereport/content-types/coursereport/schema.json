@@ -4,7 +4,8 @@
   "info": {
     "singularName": "coursereport",
     "pluralName": "coursereports",
-    "displayName": "CourseReport"
+    "displayName": "CourseReport",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -26,6 +27,17 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::course.course"
+    },
+    "course_date": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::coursedate.coursedate"
+    },
+    "course_part_date": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::coursepartdate.coursepartdate",
+      "inversedBy": "course_report"
     }
   }
 }

@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "coursepartdates",
+  "info": {
+    "singularName": "coursepartdate",
+    "pluralName": "coursepartdates",
+    "displayName": "CoursePartDate",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "date": {
+      "type": "datetime"
+    },
+    "course_parts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coursepart.coursepart"
+    },
+    "course_report": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::coursereport.coursereport",
+      "mappedBy": "course_part_date"
+    }
+  }
+}
