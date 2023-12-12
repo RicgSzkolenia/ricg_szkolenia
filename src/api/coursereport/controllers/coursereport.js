@@ -100,7 +100,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                             "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
                         }
                                 
-                        await sendCertificateMail('vs2001dor@gmail.com', `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
+                        await sendCertificateMail(graduate.email, `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
                         console.log('Successfully sent email');
                     }
 
@@ -135,7 +135,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
                 }
                         
-                await sendCertificateMail('vs2001dor@gmail.com', `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
+                await sendCertificateMail(graduate.email, `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
                 console.log('Successfully sent email');
             })
             ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, students: [...graduates]};
