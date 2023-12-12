@@ -100,13 +100,15 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                             "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
                         }
                                 
-                        await sendCertificateMail(graduate.email, `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
+                        await sendCertificateMail('vs2001dor@gmail.com', `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
                         console.log('Successfully sent email');
                     }
 
                 }
               
             })
+
+            ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, course_part_date: selectedPartDate.id,  students: [...graduates]};
         } else {
             console.log('No parts for course');
             graduates.forEach(async (graduate) => {
@@ -118,9 +120,9 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     data: {
                         uniqIdentifier: certificateId,
                         date: new Date().toISOString(),
-                        status: 'COMPLETE', 
-                        student: existingStudent.id,
-                        course: selectedDate.course.id,
+                        status: 'COMPLETED', 
+                        student: graduate?.id,
+                        course: selectedDate?.course?.id,
                         certificate: certificateBase64
                     }
                 }).catch((e) => console.log('Error creating certificate: ', e.details, e));
@@ -133,28 +135,22 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
                 }
                         
-                await sendCertificateMail(graduate.email, `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
+                await sendCertificateMail('vs2001dor@gmail.com', `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
                 console.log('Successfully sent email');
             })
-
+            ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, students: [...graduates]};
         }
         
-        ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, course_part_date: selectedPartDate.id,  students: [...graduates]};
+      
         
         const { data, meta } = await super.create(ctx).catch((e) => {
             console.log('Error occured: ', e)
         });
+
+        return ctx.send({
+            message: 'The content was created!',
+            data
+        }, 201);
     }
 })));
 
-
-
-
-
-
-
-        //     if ( participant.status === 'COMPLETED' ) {
-              
-        
-
-        //     }
