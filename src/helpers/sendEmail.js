@@ -84,7 +84,7 @@ const sendCertificateMail = async (recipientEmail, subject, context, attachments
 const sendPaymentConfiramtionMail = async (recipientEmail, subject, context) => {
  
     const transporter = createTransporter();
-    const mailOptions = createMailOptions(recipientEmail, subject, 'confirmationEmail', context);
+    const mailOptions = createMailOptions(recipientEmail, subject, 'confirmationEmail', context, []);
     const handlebarsOptions = createHandleBarsOptions();
     transporter.use('compile', hbs(handlebarsOptions))
     const info = await transporter.sendMail(mailOptions);

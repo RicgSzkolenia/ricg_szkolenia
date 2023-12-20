@@ -45,7 +45,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
             console.log('Made of parts');
             const fetchedCourseDate = await strapi.query('api::coursedate.coursedate').findOne({ 
                 where: {
-                    id: selectedDate.id 
+                    id: selectedDate?.id ?? '1'
                 }, 
                 populate: {
                     course_part_dates: {
@@ -135,7 +135,8 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                     "certUrl": `https://szkolenia.ricg.eu/check/${certificateId}`
                 }
                         
-                await sendCertificateMail(graduate.email, `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
+             
+                await sendCertificateMail('vs2001dor@gmail.com', `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
                 console.log('Successfully sent email');
             })
             ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, students: [...graduates]};
@@ -143,13 +144,12 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
         
       
         
-        const { data, meta } = await super.create(ctx).catch((e) => {
+        await super.create(ctx).catch((e) => {
             console.log('Error occured: ', e)
         });
 
         return ctx.send({
             message: 'The content was created!',
-            data
         }, 201);
     }
 })));

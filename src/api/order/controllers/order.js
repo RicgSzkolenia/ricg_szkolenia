@@ -81,8 +81,31 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                 const boughtWebinarDateIds = [];
                 const boughtItems = await Promise.all(lineItems.data?.map(async (item) => {
                     const product = await stripe.products.retrieve(item.price.product);
-                    const date = await strapi.service("api::coursedate.coursedate").findOne(product.metadata.date)
-                    callbackurls.push({ name: product.name, date: date.date, link: date.webinarLink});
+                    console.log(product.metadata);
+                    const date = await strapi.query('api::coursedate.coursedate').findOne({ 
+                        where: {
+                            id: product.metadata.date
+                        }, 
+                        populate: {
+                            course_parts: true,
+                            course_part_dates: {
+                                populate: {
+                                    course_parts: true
+                                }
+                            }
+                        }
+                    });
+                    
+                    if ( date?.course_part_dates ) {
+                        date?.course_part_dates.forEach((coursePartDate) => {
+                            console.log(coursePartDate, ' Name: ', coursePartDate?.course_parts?.[0]?.header, ' Date: ', coursePartDate?.date, ' Link: ', coursePartDate?.link );
+                            callbackurls.push({name: product.name + ' - ' + coursePartDate?.course_parts?.[0]?.header, date: coursePartDate?.date, link: coursePartDate?.link})
+                        })
+                    } else {
+                        callbackurls.push({ name: product.name, date: date.date, link: date.webinarLink});
+                    }
+
+                  
                     boughtWebinarDateIds.push(date.id)
                     return {productId: product.metadata.id, date: date.date, productTitle: product.name, quantity: item.quantity };
                 }))
@@ -92,11 +115,11 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     const customerMail = event.data.object.customer_details.email;
                     console.log('EVENT +-+: ', event);
                     await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.payment_intent, course_dates: boughtWebinarDateIds, email: customerMail, } });
+                    console.log();
                     const context = {
                         callbackurls
                     }
                     await sendPaymentConfiramtionMail(customerMail, 'Udana Płatność', context)
-                    // await sendEmail(customerMail, callbackurls)
                 }
 
                 console.log('Competed successfully', callbackurls);

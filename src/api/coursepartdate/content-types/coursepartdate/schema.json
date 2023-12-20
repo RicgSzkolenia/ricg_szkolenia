@@ -25,6 +25,9 @@
       "relation": "oneToOne",
       "target": "api::coursereport.coursereport",
       "mappedBy": "course_part_date"
+    },
+    "link": {
+      "type": "string"
     }
   }
 }
