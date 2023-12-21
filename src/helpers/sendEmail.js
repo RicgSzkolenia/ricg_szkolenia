@@ -29,7 +29,11 @@ const createMailOptions = (recipientEmail, subject, template, context, attachmen
 const createTransporter = () => {
     const transporter = nodemailer.createTransport({
         host: process.env.SMPT_SERVER,
-        port: 587,
+        port: 465,
+        secure: true,
+        logger: true, 
+        debug: true, 
+        secureConnection: false,
         auth: {
             user: process.env.SENDER_EMAIL,
             pass:  process.env.SENDER_PASSWORD
