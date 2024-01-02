@@ -95,8 +95,8 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                             }
                         }
                     });
-                    
-                    if ( date?.course_part_dates ) {
+
+                    if ( date?.course_part_dates && date?.course_part_dates?.length > 0 ) {
                         date?.course_part_dates.forEach((coursePartDate) => {
                             console.log(coursePartDate, ' Name: ', coursePartDate?.course_parts?.[0]?.header, ' Date: ', coursePartDate?.date, ' Link: ', coursePartDate?.link );
                             callbackurls.push({name: product.name + ' - ' + coursePartDate?.course_parts?.[0]?.header, date: coursePartDate?.date, link: coursePartDate?.link})
@@ -115,7 +115,6 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     const customerMail = event.data.object.customer_details.email;
                     console.log('EVENT +-+: ', event);
                     await strapi.service("api::order.order").create({ data: { paymentStatus: 'Paid', rawProducts: boughtItems, paymentId: event.data.object.payment_intent, course_dates: boughtWebinarDateIds, email: customerMail, } });
-                    console.log();
                     const context = {
                         callbackurls
                     }
