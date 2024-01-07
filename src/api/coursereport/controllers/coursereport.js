@@ -139,7 +139,7 @@ module.exports = createCoreController('api::coursereport.coursereport', (({strap
                 await sendCertificateMail(graduate.email, `Certyfikat ${selectedDate.course.title}`, context, [  { filename: 'certificate.pdf', content: certificateBase64, encoding: 'base64' }]);
                 console.log('Successfully sent email');
             })
-            ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, students: [...graduates]};
+            ctx.request.body.data = {duration: fileData.duration, course: selectedDate.course.id, course_date: selectedDate.id, students: [...graduates], rawData: fileData?.rawData};
         }
         
       

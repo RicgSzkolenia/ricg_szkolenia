@@ -43,9 +43,6 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                 line_items: lineItems,
                 payment_method_types: ["card", "blik", "p24"],
                 allow_promotion_codes: true,
-                invoice_creation: {
-                    enabled: true,
-                },
                 tax_id_collection: {
                     enabled: true,
                 }
