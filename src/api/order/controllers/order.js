@@ -7,7 +7,7 @@
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const unparsed = require('koa-body/unparsed.js');
-const { sendPaymentConfiramtionMail } = require('../../../helpers/sendEmail');
+const { sendPaymentConfiramtionMail, sendNotificationEmail } = require('../../../helpers/sendEmail');
 const { createCoreController } = require('@strapi/strapi').factories;
 
 
@@ -18,11 +18,22 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
         const lineItems = await Promise.all(
             products.map( async (item) => {
                 const foundItem =  await strapi.service("api::course.course").findOne(item.course.id);
+                const taxRate = await stripe.taxRates.create({
+                    display_name: 'EU VAT',
+                    inclusive: false,
+                    percentage: 23,
+                    country: 'PL',
+                    jurisdiction: 'PL',
+                    description: 'EU VAT 23%',
+                  });
+
+                  console.log(taxRate);
+
                 return {
                     price_data: {
                         currency: "pln",
                         product_data: {
-                            name: foundItem.Title,
+                            name: 'Webinar ' + foundItem.Title,
                             description: foundItem.shortDescription,
                             metadata: {
                                 id: foundItem.id,
@@ -31,15 +42,21 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                         },
                         unit_amount: Math.round((foundItem.redeemedPrice ?? foundItem.Price) * 100),
                     },
+                    tax_rates: [taxRate.id],
                     quantity: item.quantity,
                   };
             }))
 
         try {
+            
+
             const session = await stripe.checkout.sessions.create({
                 mode: "payment",
                 success_url: `${process.env.CLIENT_FRONT_URL}/status/payment?success=true` || '',
                 cancel_url: `${process.env.CLIENT_FRONT_URL}/status/payment?success=false` || '',
+                invoice_creation: {
+                    enabled: true,
+                },
                 line_items: lineItems,
                 payment_method_types: ["card", "blik", "p24"],
                 allow_promotion_codes: true,
@@ -65,7 +82,6 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
           event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
           switch (event.type) {
             case 'checkout.session.completed': {
-
                 const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
                     event.data.object.id,
                     {
@@ -73,12 +89,10 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     }
                   );
                 const lineItems = sessionWithLineItems.line_items;
-
                 const callbackurls = [];
                 const boughtWebinarDateIds = [];
                 const boughtItems = await Promise.all(lineItems.data?.map(async (item) => {
                     const product = await stripe.products.retrieve(item.price.product);
-                    console.log(product.metadata);
                     const date = await strapi.query('api::coursedate.coursedate').findOne({ 
                         where: {
                             id: product.metadata.date
@@ -99,12 +113,12 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                             callbackurls.push({name: product.name + ' - ' + coursePartDate?.course_parts?.[0]?.header, date: coursePartDate?.date, link: coursePartDate?.link})
                         })
                     } else {
-                        callbackurls.push({ name: product.name, date: date.date, link: date.webinarLink});
+                        callbackurls.push({ name: product.name, date: date.isDateIndividual ? 'Indywidualny termin' : date.date, link: date.webinarLink});
                     }
 
                   
                     boughtWebinarDateIds.push(date.id)
-                    return {productId: product.metadata.id, date: date.date, productTitle: product.name, quantity: item.quantity };
+                    return {productId: product.metadata.id, date: date.date, productTitle: product.name, quantity: item.quantity, isIndividual: date.isDateIndividual };
                 }))
 
                 // if session is paid
@@ -115,7 +129,17 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                     const context = {
                         callbackurls
                     }
-                    await sendPaymentConfiramtionMail(customerMail, 'Udana Płatność', context)
+                    console.log('BEFORE', callbackurls, boughtItems)
+                    boughtItems.filter((item) => item.isIndividual).forEach(async (item) => {
+                        console.log('Individual product: ', item);
+                        const notificationContext = {
+                            customerMail,
+                            course: item
+                        }
+                        console.log('HERE');
+                        await sendNotificationEmail('vs2001dor@gmail.com', 'ACTION REQUIRED: kupiono indywidualny webinar', notificationContext)
+                    })
+                    await sendPaymentConfiramtionMail(customerMail, 'Zaproszenie na Webinar', context)
                 }
 
                 console.log('Competed successfully', callbackurls);

@@ -28,6 +28,11 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::coursepartdate.coursepartdate"
+    },
+    "isDateIndividual": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

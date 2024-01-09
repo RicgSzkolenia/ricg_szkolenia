@@ -32,7 +32,6 @@ const createTransporter = () => {
         port: 465,
         secure: true,
         logger: true, 
-        debug: true, 
         secureConnection: false,
         auth: {
             user: process.env.SENDER_EMAIL,
@@ -95,10 +94,19 @@ const sendPaymentConfiramtionMail = async (recipientEmail, subject, context) => 
     console.log(info.response, info.rejected, info.accepted);
 }
 
+const sendNotificationEmail = async (recipientEmail, subject, context) => {
+    const transporter = createTransporter();
+    const mailOptions = createMailOptions(recipientEmail, subject, 'notificationEmail', context, []);
+    const handlebarsOptions = createHandleBarsOptions();
+    transporter.use('compile', hbs(handlebarsOptions));
+    const info = await transporter.sendMail(mailOptions);
+    console.log(info.response, info.rejected, info.accepted);
+}
 
 module.exports = { 
     sendEmail, 
     sendEmailWithNodeMailer,
     sendPaymentConfiramtionMail,
-    sendCertificateMail
+    sendCertificateMail,
+    sendNotificationEmail
 }
