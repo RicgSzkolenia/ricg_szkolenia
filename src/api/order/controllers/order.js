@@ -20,7 +20,7 @@ module.exports = createCoreController('api::order.order', ({strapi})=> ({
                 const foundItem =  await strapi.service("api::course.course").findOne(item.course.id);
                 const taxRate = await stripe.taxRates.create({
                     display_name: 'EU VAT',
-                    inclusive: false,
+                    inclusive: true,
                     percentage: 23,
                     country: 'PL',
                     jurisdiction: 'PL',
