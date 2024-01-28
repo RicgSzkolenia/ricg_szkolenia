@@ -30,11 +30,21 @@
       ]
     },
     "rodo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "files"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "tiktokLink": {
+      "type": "string"
+    },
+    "instaLink": {
+      "type": "string"
+    },
+    "facebookLink": {
+      "type": "string"
     }
   }
 }
